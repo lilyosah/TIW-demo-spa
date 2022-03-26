@@ -1,3 +1,3 @@
 djangoenv
-myproject/myproject/_pycache_
-myproject/myapp/_pycache_
+myproject/myproject/__pycache__
+myproject/myapp/__pycache__
