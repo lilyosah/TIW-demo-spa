@@ -1,4 +1,5 @@
 # TIW-demo-spa
+*This project assumes that you have Python and an IDE (ex. VSCode) of your choice already installed.*
 
 ## BACKEND: DJANGO SETUP
 Note: Try `pip3` if `pip` is not found. Try `python3` if `python` is not found.
