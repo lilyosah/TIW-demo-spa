@@ -1,83 +1,98 @@
 import { useState, useEffect } from "react";
+import { v4 as uuidv4 } from "uuid";
 
 import "./App.css";
 
 function App() {
   const [todos, setTodos] = useState([
     {
-      id: 1,
+      id: "1",
       title: "orci luctus",
       description: "Sed vel enim sit amet nunc viverra dapibus.",
       completed: true,
     },
     {
-      id: 2,
+      id: "2",
       title: "condimentum",
       description:
         "In hac habitasse platea dictumst. Morbi vestibulum, velit id pretium iaculis, diam erat fermentum justo, nec condimentum neque sapien placerat ante. Nulla justo.",
       completed: false,
     },
     {
-      id: 3,
+      id: "3",
       title: "diam erat",
       description:
         "Suspendisse potenti. In eleifend quam a odio. In hac habitasse platea dictumst. Maecenas ut massa quis augue luctus tincidunt. Nulla mollis molestie lorem.",
       completed: true,
     },
     {
-      id: 4,
+      id: "4",
       title: "volutpat in",
       description:
         "Nulla justo. Aliquam quis turpis eget elit sodales scelerisque. Mauris sit amet eros. Suspendisse accumsan tortor quis turpis. Sed ante.",
       completed: true,
     },
     {
-      id: 5,
+      id: "5",
       title: "ut blandit",
       description:
         "Nulla tellus. In sagittis dui vel nisl. Duis ac nibh. Fusce lacus purus, aliquet at, feugiat non, pretium quis, lectus. Suspendisse potenti.",
       completed: false,
     },
     {
-      id: 6,
+      id: "6",
       title: "hendrerit",
       description:
         "Morbi porttitor lorem id ligula. Suspendisse ornare consequat lectus. In est risus, auctor sed, tristique in, tempus sit amet, sem. Fusce consequat. Nulla nisl.",
       completed: false,
     },
     {
-      id: 7,
+      id: "7",
       title: "eu",
       description:
         "Mauris sit amet eros. Suspendisse accumsan tortor quis turpis.",
       completed: true,
     },
     {
-      id: 8,
+      id: "8",
       title: "odio porttitor",
       description:
         "Morbi vestibulum, velit id pretium iaculis, diam erat fermentum justo, nec condimentum neque sapien placerat ante. Nulla justo. Aliquam quis turpis eget elit sodales scelerisque. Mauris sit amet eros.",
       completed: false,
     },
     {
-      id: 9,
+      id: "9",
       title: "ante",
       description:
         "Morbi non lectus. Aliquam sit amet diam in magna bibendum imperdiet. Nullam orci pede, venenatis non, sodales sed, tincidunt eu, felis. Fusce posuere felis sed lacus. Morbi sem mauris, laoreet ut, rhoncus aliquet, pulvinar sed, nisl.",
       completed: true,
     },
     {
-      id: 10,
+      id: "10",
       title: "ante",
       description:
         "Vivamus metus arcu, adipiscing molestie, hendrerit at, vulputate vitae, nisl.",
       completed: false,
     },
   ]);
+  const addTodo = (e) => {
+    e.preventDefault();
+    const fields = e.currentTarget.elements;
+    const id = uuidv4();
+    const title = fields["title"].value;
+    const description = fields["description"].value;
+    const newTodo = {
+      id: id,
+      title: title,
+      description: description,
+      completed: false,
+    };
+    setTodos(todos.concat(newTodo));
+  };
   const completeTodo = (e) => {
     const input = e.currentTarget;
     const li = input.parentNode.parentNode.parentNode;
-    const id = parseInt(li.id);
+    const id = li.id;
     const target = todos.filter((todo) => {
       return todo.id === id;
     })[0];
@@ -96,6 +111,35 @@ function App() {
       <div className="row">
         <div className="col-11">
           <h1 className="display-1 text-center">My Todos</h1>
+          <form onSubmit={addTodo}>
+            <label htmlFor="title">Title</label>
+            <div className="input-group mb-3">
+              <input
+                name="title"
+                type="text"
+                className="form-control"
+                row="1"
+                autoComplete="off"
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="description">Description</label>
+              <textarea
+                className="form-control"
+                rows="3"
+                name="description"
+                required
+              ></textarea>
+            </div>
+            <br />
+            <div>
+              <button type="submit" className="btn btn-success">
+                Add
+              </button>
+            </div>
+            <br />
+          </form>
           <ul className="list-group">
             {todos.map((todo) => (
               <li className="list-group-item" key={todo.id} id={todo.id}>
