@@ -10,7 +10,7 @@ Note: Try `pip3` if `pip` is not found. Try `python3` if `python` is not found.
 `$ mkdir todo-app`
 3. Navigate to the directory.<br>
 `$ cd todo-app`
-4. Install virtualenv using `pip` if you don't have it already. This will allow us to isolate our project from the rest of our computer.<br>
+4. Install virtualenv using `pip` if you don't have it already. This will allow us to isolate our project from the rest of our computer (so we don't have to worry about dependency conflicts between this and any other projects we have).<br>
 `$ pip install virtualenv`
 5. Create a new virtual environment.<br>
 `$ python -m venv djangoenv`
