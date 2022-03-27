@@ -1,6 +1,8 @@
 # TIW-demo-spa
 *This project assumes that you have Python and an IDE (ex. VSCode) of your choice already installed.*
 
+Note: Type the commands in a terminal *without* the `$` symbol, this symbol indicates it should be typed on the command line.
+
 ## BACKEND: DJANGO SETUP
 Note: Try `pip3` if `pip` is not found. Try `python3` if `python` is not found.
 1. Open terminal.
