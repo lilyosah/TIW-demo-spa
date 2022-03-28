@@ -1,15 +1,25 @@
 import "./App.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
+import { API } from "./API";
 
 function App() {
   const [todos, setTodos] = useState([]);
+
+  useEffect(() => {
+    const fetchTasks = async () => {
+      setTodos((await API.getTodos()).data);
+    }
+    fetchTasks();
+  }, [])
+    
   const completeTodo = (e) => {
     const input = e.currentTarget;
-    const id = input.id;
+    const id = parseInt(input.id);
     const target = todos.filter((todo) => {
       return todo.id === id;
     })[0];
+    API.editTodo(target);
     target.completed = !target.completed;
     const updated = todos.map((todo) => {
       if (todo.id === id) {
@@ -19,6 +29,7 @@ function App() {
       }
     });
     setTodos(updated);
+    API.editTodo(target);
   };
 
   const addTodo = (e) => {
@@ -36,26 +47,35 @@ function App() {
     };
     form.reset();
     setTodos([newTodo].concat(todos));
+    API.addTodo(newTodo);
   };
 
   const deleteTodo = (e) => {
-    const id = e.currentTarget.id;
+    const id = parseInt(e.currentTarget.id);
     setTodos(todos.filter((todo) => todo.id !== id));
+    API.deleteTodo(id);
   };
 
   const editTodo = (e) => {
     const target = todos.filter((todo) => {
-      return todo.id === e.currentTarget.id;
+      return todo.id === parseInt(e.currentTarget.id);
     })[0];
-    target.title = window.prompt("Update the title", target.title);
-    target.description = window.prompt(
+    const title = window.prompt("Update the title", target.title);
+    const description = window.prompt(
       "Update the description",
       target.description
-    );
-    if (target.title !== "" && target.description !== "") {
+      );
+    if ((title !== "" && title !== null) || (description !== "" && description !== null)) {
       setTodos(
         todos.map((todo) => {
-          if (todo.id === target.id) {
+          if (todo.id === parseInt(target.id)) {
+            if (title !== "" && title !== null) {
+              target.title = title;
+            }
+            if (description !== "" && description !== null) {
+              target.description = description;
+            }
+            API.editTodo(target);
             return target;
           } else {
             return todo;
