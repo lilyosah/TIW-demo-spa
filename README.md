@@ -10,7 +10,7 @@ To set up your project, run either the steps to create one from scratch OR the i
 
 ### To set up a new Django project from scratch
 
-These steps will only need to be run once.
+These steps will only need to be run once. Do not run these if you would like to use the project we have set-up.
 
 Note: Try `pip3` if `pip` is not found. Try `python3` if `python` is not found.
 
@@ -18,11 +18,11 @@ Note: Try `pip3` if `pip` is not found. Try `python3` if `python` is not found.
 
 2. Create a new project directory wherever you would like.
 
-    `$ mkdir todo-app`
+    `$ mkdir todo`
 
 3. Navigate to the directory.
 
-    `$ cd todo-app`
+    `$ cd todo`
 
 4. Install virtualenv using `pip` if you don't have it already. This will allow us to isolate our project from the rest of our computer.
 
@@ -47,7 +47,7 @@ Note: Try `pip3` if `pip` is not found. Try `python3` if `python` is not found.
 
 7. Install Django inside the virtual environment.
 
-    `$ python -m pip install -r requirements.txt`
+    `$ python -m pip install django`
 
 8. Create a new Django project.
 
@@ -57,7 +57,7 @@ Note: Try `pip3` if `pip` is not found. Try `python3` if `python` is not found.
 
     `$ cd myproject`
 
-### To set up Django to run this project for the first time
+### To set up Django to run THIS project for the first time
 
 These steps will only need to be run once.
 
@@ -65,16 +65,23 @@ Note: Try `pip3` if `pip` is not found. Try `python3` if `python` is not found.
 
 1. Open a terminal.
 
-2. Clone this directory wherever you would like.<br>
-  `$ git clone https://github.com/techimmersionweek22/Demo-To-Do-SPA.git`
+2. Clone this directory wherever you would like.
 
-3. Install virtualenv using `pip` if you don't have it already. This will allow us to isolate our project from the rest of our computer (so we don't have to worry about dependency conflicts between this and any other projects we have).<br>
-  `$ pip install virtualenv`
+    `$ git clone https://github.com/techimmersionweek22/Demo-To-Do-SPA.git`
 
-4. Create a new virtual environment for use with this project.<br>
-  `$ python -m venv SPADemo`
+3. Change directories into the new folder
 
-5. Activate the virtual environment. Note that you will need to activate the virtual environment every time you want to work on this project.
+    `$ cd Demo-To-Do-SPA`
+
+4. Install virtualenv using `pip` if you don't have it already. This will allow us to isolate our project from the rest of our computer (so we don't have to worry about dependency conflicts between this and any other projects we have).
+
+    `$ pip install virtualenv`
+
+5. Create a new virtual environment for use with this project.
+  
+    `$ python -m venv SPADemo`
+
+6. Activate the virtual environment. Note that you will need to activate the virtual environment every time you want to work on this project.
 
     **Mac/Linux:**
 
@@ -87,17 +94,18 @@ Note: Try `pip3` if `pip` is not found. Try `python3` if `python` is not found.
 
     If it worked, you will see some sort of indicator or the environment name at the beginning of the line.
 
-6. Install Django inside the virtual environment.
-    `$ python -m pip install Django`
+7. Install dependencies inside the virtual environment.
 
-7. Navigate to the Django project.
-    `$ cd todo-app`
+    `$ python -m pip install -r requirements.txt`
+
+8. Navigate to the Django project.
+    `$ cd todo-be`
 
 ### To start the development server
 
 These steps will need to be run every time you work on the project.
 
-1. Within the correct virtual environment and directory (run the steps to activate the env if it is not already activated and cd into your project folder) apply any necessary migrations.
+1. Within the correct virtual environment and directory (run the steps to activate the env if it is not already activated and cd into your project folder (myproject)) apply any necessary migrations.
 
     `$ python manage.py migrate`
 

@@ -2,4 +2,4 @@
 /.vscode
 /SPADemo
 *.pyc
-todo-app/db.sqlite3
+todo-be/db.sqlite3
