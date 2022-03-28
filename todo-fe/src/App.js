@@ -32,22 +32,23 @@ function App() {
     API.editTodo(target);
   };
 
-  const addTodo = (e) => {
+  const addTodo = async (e) => {
     e.preventDefault();
     const form = e.currentTarget;
     const fields = form.elements;
-    const id = uuidv4();
     const title = fields["title"].value;
     const description = fields["description"].value;
     const newTodo = {
-      id: id,
       title: title,
       description: description,
       completed: false,
     };
     form.reset();
-    setTodos([newTodo].concat(todos));
-    API.addTodo(newTodo);
+    const response = await API.addTodo(newTodo);
+    if (response.status === 201 ) {
+      newTodo.id = response.data.id;
+      setTodos([newTodo].concat(todos));
+    }
   };
 
   const deleteTodo = (e) => {
