@@ -19,11 +19,14 @@ from django.urls import path, include
 from rest_framework import routers
 from myapp import views
 
+# Added for pt 3
+
 # router = routers.DefaultRouter()
 # router.register(r'', views.tasks, 'task')
 # router.register(r'/details', views.task_details, 'task-details')
 
 urlpatterns = [
-    path('', include('myapp.urls')),
+    path('', views.serve_front_end, name='home'),
+    path('todos/', include('myapp.urls')),
     path('admin/', admin.site.urls),
 ]
