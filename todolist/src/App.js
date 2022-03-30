@@ -1,13 +1,25 @@
+import "./App.css";
 import { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
-import "./App.css";
-import List from "./Components/List";
-import Todo from "./Components/Todo";
 
 function App() {
   const [todos, setTodos] = useState([]);
-  const [viewList, setViewList] = useState(true);
-  const [targetTodo, setTargetTodo] = useState({});
+  const completeTodo = (e) => {
+    const input = e.currentTarget;
+    const id = input.id;
+    const target = todos.filter((todo) => {
+      return todo.id === id;
+    })[0];
+    target.completed = !target.completed;
+    const updated = todos.map((todo) => {
+      if (todo.id === id) {
+        return target;
+      } else {
+        return todo;
+      }
+    });
+    setTodos(updated);
+  };
 
   const addTodo = (e) => {
     e.preventDefault();
@@ -26,83 +38,114 @@ function App() {
     setTodos([newTodo].concat(todos));
   };
 
-  const editTodo = (e) => {
-    e.preventDefault();
-    const form = e.currentTarget;
-    const fields = form.elements;
-    const id = fields["id"].value;
-    const title = fields["title"].value;
-    const description = fields["description"].value;
-    const updatedTodo = {
-      id: id,
-      title: title,
-      description: description,
-      completed: false,
-    };
-    setTodos(
-      todos.map((todo) => {
-        if (id === todo.id) {
-          return updatedTodo;
-        } else {
-          return todo;
-        }
-      })
-    );
-    form.reset();
-    setViewList(true);
-  };
-
   const deleteTodo = (e) => {
     const id = e.currentTarget.id;
     setTodos(todos.filter((todo) => todo.id !== id));
-    setViewList(true);
   };
 
-  const completeTodo = (e) => {
-    const input = e.currentTarget;
-    const li = input.parentNode.parentNode.parentNode;
-    const id = li.id;
+  const editTodo = (e) => {
     const target = todos.filter((todo) => {
-      return todo.id === id;
+      return todo.id === e.currentTarget.id;
     })[0];
-    target.completed = !target.completed;
-    const updated = todos.map((todo) => {
-      if (todo.id === id) {
-        return target;
-      } else {
-        return todo;
-      }
-    });
-    setTodos(updated);
-  };
-
-  const viewTodo = (e) => {
-    const h3 = e.currentTarget;
-    const li = h3.parentNode.parentNode.parentNode.parentNode;
-    const id = li.id;
-    const target = todos.filter((todo) => {
-      return todo.id === id;
-    })[0];
-    setTargetTodo(target);
-    setViewList(false);
+    target.title = window.prompt("Update the title", target.title);
+    target.description = window.prompt(
+      "Update the description",
+      target.description
+    );
+    if (target.title !== "" && target.description !== "") {
+      setTodos(
+        todos.map((todo) => {
+          if (todo.id === target.id) {
+            return target;
+          } else {
+            return todo;
+          }
+        })
+      );
+    }
   };
 
   return (
-    <div id="App" className="container">
-      <List
-        todos={todos}
-        viewList={viewList}
-        viewTodo={viewTodo}
-        addTodo={addTodo}
-        completeTodo={completeTodo}
-      ></List>
-      <Todo
-        targetTodo={targetTodo}
-        viewList={viewList}
-        setViewList={setViewList}
-        editTodo={editTodo}
-        deleteTodo={deleteTodo}
-      ></Todo>
+    <div className="container">
+      <div>
+        <h1 className="text-center display-1">My Todos</h1>
+
+        <form onSubmit={addTodo}>
+          <label htmlFor="title">Title</label>
+          <div className="input-group mb-3">
+            <input
+              name="title"
+              type="text"
+              className="form-control"
+              row="1"
+              autoComplete="off"
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="description">Description</label>
+            <textarea
+              className="form-control"
+              rows="3"
+              name="description"
+              required
+            ></textarea>
+          </div>
+          <br />
+          <div>
+            <button type="submit" className="btn btn-success">
+              Add
+            </button>
+          </div>
+          <br />
+        </form>
+
+        <ul className="list-group">
+          {todos.map((todo) => {
+            return (
+              <li className="list-group-item" key={todo.id} id={todo.id}>
+                <div className="row">
+                  <div className="col-11 text-center">
+                    <h3>
+                      {" "}
+                      {todo.completed ? <s>{todo.title}</s> : todo.title}
+                    </h3>
+                  </div>
+                  <div className="col-1">
+                    <input
+                      className="form-check-input"
+                      type="checkbox"
+                      id={todo.id}
+                      checked={todo.completed}
+                      onChange={completeTodo}
+                    ></input>
+                  </div>
+                </div>
+                <div className="text-wrap">
+                  <p>{todo.description}</p>
+                </div>
+                <button
+                  type="button"
+                  className="btn btn-primary"
+                  id={todo.id}
+                  onClick={editTodo}
+                >
+                  Edit
+                </button>
+                &nbsp;
+                <button
+                  type="button"
+                  className="btn btn-danger"
+                  id={todo.id}
+                  onClick={deleteTodo}
+                >
+                  Delete
+                </button>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
     </div>
   );
 }

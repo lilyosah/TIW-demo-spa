@@ -1,1 +1,7 @@
 /node_modules
+/.vscode
+/SPADemo
+*.pyc
+todo-be/db.sqlite3
+todo-fe/build
+todo-fe/node_modules
