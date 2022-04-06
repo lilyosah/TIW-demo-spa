@@ -3,10 +3,10 @@
 Steps:
 
 1. Rename directories/folders for clarity
-    - `todo-app/myproject` -> `todo-b`e (get rid of the outer `myproject` folder, move everything in it directly to `todo-be`)
+    - `todo-app/myproject` -> `todo-be` (get rid of the outer `myproject` folder, move everything in it directly to `todo-be`)
     - `todolist` -> `todo-fe`
 
-2. Add these lines to `todo-be/myproject/settings.py`
+2. Add these lines to [todo-be/myproject/settings.py](todo-be/myproject/settings.py)
 
     - At the top of the file: `import os`
     - Change `ALLOWED_HOSTS = []` to `ALLOWED_HOSTS = ['localhost', '127.0.0.1']` around line 28.
@@ -24,7 +24,61 @@ Steps:
         ]
         ```
 
-3. Add an API JavaScript object to access our back-end methods
+3. Add fixes for back-end methods
+
+    Replace the two methods at the bottom of [todo-be/myproject/views.py](todo-be/myproject/views.py). These make sure the data is valid before saving it and return error responses when needed.
+
+    ```Python
+    @api_view(['GET', 'POST'])
+    def tasks(request):
+        # Get all tasks
+        if request.method == 'GET':
+            data = Task.objects.all()
+            serializer = TaskSerializer(data, context={'request': request}, many=True) 
+            return Response(serializer.data)
+        # Create a new task
+        elif request.method == 'POST':
+            serializer = TaskSerializer(
+                data = request.data
+            )
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            else:
+                return Response(status=status.HTTP_400_BAD_REQUEST, data={
+                    "errors": serializer.errors})
+
+    @api_view(['GET', 'DELETE', 'PATCH'])
+    def task_details(request, id):
+        try:
+            task = Task.objects.get(id=id)
+        except Task.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        # Get a specific task
+        if request.method == 'GET':
+            serializer = TaskSerializer(task, context={"request": request})
+            return Response(serializer.data)
+        # Delete a task
+        elif request.method == 'DELETE':
+            task.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        elif request.method == 'PATCH':
+            # Update fields
+            updated_data = request.data.copy()
+            serializer = TaskSerializer( 
+                task,
+                data=updated_data, 
+                partial=True)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data)
+            else:
+                return Response(status=status.HTTP_400_BAD_REQUEST, data={
+                    "errors": serializer.errors})
+    ```
+
+4. Add an API JavaScript object to access our back-end methods
 
     - Create a new file in `todo-fe/src` called `API.js`
     - Paste this code inside `API.js`
@@ -50,11 +104,10 @@ Steps:
         deleteTodo: (id) => {
             return axios.delete(url+id);
         }
-
     }
     ```
 
-4. Add the following code to the top of `todo-fe/src/App.js`
+5. Add the following code to the top of [todo-fe/src/App.js](todo-fe/src/App.js)
 
     - Import our new file at the top by the other imports:
     `import { API } from "./API";`
@@ -71,7 +124,7 @@ Steps:
         }, [])
         ```
 
-5. Update methods in `todo-fe/src/App.js` to utilize and connect to our back-end
+6. Update methods in [todo-fe/src/App.js](todo-fe/src/App.js) to utilize and connect to our back-end
 
     - `completeTodo`
 
@@ -174,7 +227,7 @@ Steps:
         };
         ```
 
-6. Test our changes
+7. Test our changes
 
     - Open TWO terminals. (Must be powershell in Windows)
     - In both, switch into your virtual environment.
@@ -199,17 +252,16 @@ Steps:
 
         ```Bash
         $ cd todo-fe
+        $ npm install axios --save
         $ npm install
         $ npm start
         ```
 
-    - Navigate to ___ in a browser. You should be able to add a task, refresh the page, and see the same task.
+    - Navigate to http://localhost:3000/ in a browser. You should be able to add a task, refresh the page, and see the same task.
 
+8. Serve built resources from back-end server url
 
-
-6. Serve built resources from back-end server url
-
-    - Add the following lines to the top of todo-be/myapp/views.py under the import statements already there. This will serve the built HTML/JS files at after you have built them using `$ npm run build`.
+    - Add the following lines to the top of [todo-be/myapp/views.py](todo-be/myapp/views.py) under the import statements already there. This will serve the built HTML/JS files at after you have built them using `$ npm run build`.
 
         ```Python
         import os
@@ -248,7 +300,16 @@ Steps:
         ]
         ```
 
-    - Update our API url in `todo-fe/src/API.js`
+    - Update our API url in [todo-fe/src/API.js](todo-fe/src/API.js)
 
         `const url = "http://localhost:8000/todos/";`
 
+    - Run `$ npm run build` in the front-end terminal.
+
+        This will optimize and minify all of our React code for a production environment. The optimized build does not auto-reload, so you will need to re-run this command after you make changes to see them reflected. For this reason, it's better to develop using the development server (`$ npm start`)
+
+9. Test our changes
+
+    - Make sure the front-end server is running. The front-end server does NOT need to be running to see the optimized build.
+    - Navigate to http://127.0.0.1:8000/ in a browser.
+    - You should see the app.
